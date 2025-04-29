@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Sign Language Translator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="title">
+      <h1 class="title">SpeakBit: A micro:bit Sign Language Translator</h1>
+    </div>
+
+    <div class="topnav">
+      <a href="about.html">About</a>
+      <a href="sources.html">Sources</a>
+      <a class="active" href="index.html"><b>Home</b></a>
+    </div>
+    <br />
+    <h2>Detected Gesture:</h2>
+    <h2 id="gesture">Waiting for gesture...</h2>
+    <h3 id="accuracy">Accuracy: --%</h3>
+    <br /><br />
+
+    <div class="table">
+      <h2>Gesture History</h2>
+      <table id="gestureTable">
+        <thead>
+          <tr>
+            <th>Gesture</th>
+            <th>Accuracy (%)</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <h2>Recognition Accuracy Graph</h2>
+    <canvas id="accuracyChart"></canvas>
+
+    <br /><br />
+
+    <script type="module">
+      // import firebase functions AC
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        onValue,
+      } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+      // firebase configuration AC
+      const firebaseConfig = {
+        apiKey: "AIzaSyBaZcYQKh3-22soxn_wqzP4QZmI9UpaHhs",
+        authDomain: "codingcba-e2914.firebaseapp.com",
+        databaseURL: "https://codingcba-e2914-default-rtdb.firebaseio.com/",
+        projectId: "codingcba-e2914",
+        storageBucket: "codingcba-e2914.appspot.com",
+        messagingSenderId: "924439097561",
+        appId: "1:924439097561:web:c0889cf64d8a413e510ec8",
+        measurementId: "G-DWN4Z6XPF0",
+      };
+
+      // initialize fb AC
+      const app = initializeApp(firebaseConfig);
+      const database = getDatabase(app);
+      const gestureRef = ref(database, "gestures");
+
+      // accuracy line graph AC
+      const ctx = document.getElementById("accuracyChart").getContext("2d");
+      const accuracyChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Recognition Accuracy (%)",
+              data: [],
+              borderColor: "rgb(75, 192, 192)",
+              borderWidth: 2,
+              tension: 0.3,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: { min: 70, max: 100 },
+          },
+        },
+      });
+
+      // listen for changes in fb and update AC
+      onValue(gestureRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.gesture && data.accuracy) {
+          let gestureText = data.gesture;
+          if (data.gesture == "waving") {
+            gestureText = "Hello 👋";
+          }
+          if (data.gesture == "thank you") {
+            gestureText = "Thanks ☺️";
+          }
+          if (data.gesture == "none") {
+            gestureText = "None ❌";
+          }
+          if (data.gesture == "sorry") {
+            gestureText = "Sorry 😥";
+          }
+          if (data.gesture == "yes") {
+            gestureText = "Yes 👍";
+          }
+
+          document.getElementById("gesture").innerText = gestureText;
+          document.getElementById("accuracy").innerText = `Accuracy: ${Math.round(data.accuracy)}%`;
+
+          updateChart(data.gesture, Math.round(data.accuracy));
+          updateGestureTable(gestureText, Math.round(data.accuracy)); // add gesture to table AC
+        } else {
+          document.getElementById("gesture").innerText =
+            "Waiting for gesture...";
+          document.getElementById("accuracy").innerText = "Accuracy: --%";
+        }
+      });
+
+      // update the accuracy chart AC
+      function updateChart(gesture, accuracy) {
+        accuracyChart.data.labels.push(gesture); // add new gesture label AC
+        accuracyChart.data.datasets[0].data.push(accuracy); // add accuracy value AC
+        accuracyChart.update();
+      }
+
+      // update gesture table AC
+      function updateGestureTable(gesture, accuracy) {
+        let table = document
+          .getElementById("gestureTable")
+          .getElementsByTagName("tbody")[0];
+
+        if (table.rows.length >= 5) {
+          table.deleteRow(0);
+        }
+
+        let row = table.insertRow(-1);
+        let cell1 = row.insertCell(0);
+        let cell2 = row.insertCell(1);
+        cell1.innerText = gesture;
+        cell2.innerText = accuracy + "%";
+      }
+    </script>
+  </body>
+</html>

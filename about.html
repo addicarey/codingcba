@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <title>Sign Language Translator</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div class="title">
+      <h1 class="title">SpeakBit: A micro:bit Sign Language Translator</h1>
+    </div>
+
+    <div class="topnav">
+      <a class="active" href="about.html"><b>About</b></a>
+      <a href="sources.html">Sources</a>
+      <a href="index.html">Home</a>
+    </div>
+    
+    <br />
+    <div class="about">
+     
+      <h1>
+        About
+      </h1>
+      <br />
+      
+      <div class="why">
+        <h3>
+        Why did we choose this idea?
+      </h3>
+      <p>
+        Communication is a fundamental aspect of human interaction, yet for individuals who are deaf or hard of hearing, barriers often exist in everyday conversations. Sign language is a powerful tool that bridges this gap, but not everyone knows how to interpret it. This challenge inspired us to create SpeakBit for our Coding CBA, an AI-powered sign language translator using a BBC micro:bit. Our goal is to break down communication barriers and enable real-time interpretation of sign language gestures into text, making interactions more accessible for everyone.
+        Additionally, we wanted to combine many aspects of the course such as machine learning and embedded systems. By integrating an AI model with the micro:bit’s motion sensors, we aimed to develop a practical solution that can recognise and translate hand gestures accurately.
+      </p>
+        <img src="https://cdn.glitch.global/c7b1e39f-b8d6-44ae-bc77-0e2cafd2da52/flow%20-%20Page%201%20(6).png?v=1743545841460">
+      </div>
+      
+      <div class="how">
+        <h3>
+        How did we do this?
+      </h3>
+      <p>
+        There were a number of various steps and parts taken to develop SpeakBit, in which we all took credit for:
+        <h4>
+          Gesture Recognition using the micro:bit
+      </h4>
+      Our project uses the accelerometer inside the BBC micro:bit to detect hand movements. Each sign language gesture produces a unique pattern of motion data, which we used to train our AI model.
+      <ol>
+        <li>Gesture Creation: We decided to focus on 5 different gestures in our AI mode, as it would remain simple yet higher accuracy and room for further adjustments. We practiced demonstrating each gesture before recording the data to esnure we were doing the correct movements.</li>
+        
+        <li>Data Collection: We used the Micro:bit CreateAI tool to record hundreds of data samples directly from the micro:bit's accelerometer. Each sample included x, y, and z-axis motion data corresponding to specific sign language gestures like Hello, Thanks, Sorry, Yes and None (no gesture). We spent time recording each sample individually.</li>
+
+        <li>Data Cleaning: The collected data was cleaned and we ensured to delete any outliers for each gesture. This ensures that we maintain a high accuracy by eliminating any gestures that don't replicate the rest of the dataset.</li>
+
+      </ol>
+      <h4>
+        Training the ML model
+      </h4>
+        To recognise gestures with high accuracy, we trained a machine learning model using the Micro:bit CreateAI platform. This tool provided an simple way to train AI models directly on the micro:bit, leveraging its onboard accelerometer for gesture recognition. The steps included:
+      <ol>
+        <li>Data Recording & Model Training: CreateAI enabled us to record motion data samples and automatically train a model using those samples. The platform streamlined the process by handling data segmentation, feature extraction, and model optimization.</li>
+
+        <li>Gesture Classification: The trained model was capable of distinguishing between predefined gestures by recognising patterns in accelerometer data. The embedded classification engine allowed real-time predictions on the micro:bit itself. We used the accuracy levels to refine our dataset and make further adjustments before deploying.</li>
+
+        <li>Deployment & Testing: Once trained, the model was deployed directly to the micro:bit, enabling it to recognise gestures immediately. We tested and refined the model by observing real-time accuracy and adjusting training parameters accordingly.</li>
+      </ol>
+        <img src="https://cdn.glitch.global/c7b1e39f-b8d6-44ae-bc77-0e2cafd2da52/flow%20-%20Page%201%20(4).png?v=1743543761051">
+      <h4>
+        Firebase Integration
+      </h4>
+      To make gesture recognition dynamic, we integrated Google Firebase as a real-time database. Firebase is a cloud-based platform by Google that provides real-time databases, authentication, and hosting for web and mobile apps:
+      <ol>
+       <li>The micro:bit sends motion data to a Python script as text through the serial port, indicating the corresponding predicted gesture.</li> 
+
+       <li>The result is uploaded to Firebase, which updates in real-time.</li>
+
+      <li>The web interface retrieves data from Firebase and displays the detected gesture on-screen with an accuracy score.</li>
+      
+      </ol>
+        <img src="https://cdn.glitch.global/c7b1e39f-b8d6-44ae-bc77-0e2cafd2da52/flow%20-%20Page%201%20(5).png?v=1743544135798">
+      <h4>
+        Web Interface and Visualisation
+      </h4>
+      To make the system user-friendly, we built a simple user interface using Glitch, combining our skills of HTML, CSS and JavaScript that displays:
+      <ul>
+        <li>The recognized gesture from the micro:bit</li>
+        <li>Accuracy percentage of relevant gesture to show confidence level</li>
+        <li>A real-time accuracy graph using Chart.js to visualize model performance</li>
+        <li>Gesture history table, showing past recognized gestures with their corresponding accuracys</li>
+      </ul>
+      </p>
+      <img src="https://cdn.glitch.global/c7b1e39f-b8d6-44ae-bc77-0e2cafd2da52/flow%20-%20Page%201%20(2).png?v=1743542671594">
+      </div>
+    
+    <div class="what">
+
+      <h3>
+        What could this be used for?
+      </h3>
+    <p>
+      Our SpeakBit Sign Language Translator can be applied in several impactful ways:
+<ol>
+  <li>Accessibility in Public Spaces: This could be used in public service centers, schools, and hospitals where sign language interpretation is needed.</li>
+
+  <li>Education: This can help students and educators learn and practice sign language by providing real-time feedback.</li>
+
+  <li>Personal Communication: This can assist individuals who are deaf or hard of hearing in everyday conversations with non-signers.</li>
+
+  <li>Smart Home & IoT Integration: Potentially, SpeakBit can be expanded to control smart home devices using sign language.</li>
+
+</ol>
+      </p>
+    </div>
+  <div class="how">
+    <h3>
+      Our Final micro:bit code + interactive micro:bit
+    </h3>
+    <div class="mb1">
+      <iframe src="https://makecode.microbit.org/---codeembed#pub:_M1j4xx1exR19" allowfullscreen="allowfullscreen" frameborder="0" sandbox="allow-scripts allow-same-origin"></iframe>
+     
+      <iframe class="mb2" src="https://makecode.microbit.org/---run?id=_M1j4xx1exR19" allowfullscreen="allowfullscreen" sandbox="allow-popups allow-forms allow-scripts allow-same-origin" frameborder="0"></iframe>
+    
+    </div>
+    
+  </div>
+
+
+    
+  </body>
+</html>
